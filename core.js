@@ -941,6 +941,7 @@ function exapi() {
 			document.getElementById("export").classList.toggle("d");
 			var tproject = (project.meta.compress?api.compressProject(project):convert());
 			if (arg1 != false) document.getElementsByClassName("ex_c")[0].value = JSON.stringify(tproject);
+			if (arg1 != false) document.getElementsByClassName("ex_r")[0].value = JSON.stringify(project);
 			document.querySelector('#export .exportlink').innerHTML = '';
 		}
 		else if (id == "import") {
