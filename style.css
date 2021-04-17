@@ -1,0 +1,550 @@
+a {color:#000}
+label {cursor:pointer}
+html {height:100%}
+body {
+	height:100%;
+	margin:0;
+	background:#fff;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	font-family: Open Sans, sans-serif;
+	font-size:16px
+	}
+body.night {
+	scrollbar-arrow-color: #ddd;
+	scrollbar-base-color: #000;
+}
+
+::-webkit-scrollbar, ::-webkit-scrollbar-track{
+    width:12px;
+}
+::-webkit-scrollbar-thumb{
+    background-color: #bbb;
+}
+body.night ::-webkit-scrollbar-thumb{
+    background-color: #2b2f52;
+}
+
+#top {
+	background:#fff;
+	transition:.15s;
+	height:1.6em;
+	width:100%;
+	z-index:0;
+	position:relative;
+	border-bottom:1px #ddd solid;
+	font-size:1.4em}
+#c {
+	transition:.15s;
+	cursor:crosshair;
+	background:#ccc;
+	float:left;
+	position:fixed;
+	left:0;
+	top:0;
+	height:100%;
+	width:100%}
+body.customCursor #c {cursor: url('cur.cur'), crosshair;}
+	
+#bottom { 
+	border-top:1px solid #ddd;
+	background:#fff;
+	position:fixed;
+	bottom:0;
+	width:100%;
+	transition:.15s;
+	left:0}
+#bottom .list {
+	overflow-y:auto;
+	width:100%;
+	height:calc(100% - 2.1em);
+	margin-top:2px}
+.bl {display:block !important}
+.il {
+	display:inline !important;
+	float:none !important}
+.ilb {
+	display:inline-block !important;
+	float:none !important}
+.hd {display:none !important}
+
+.b img, .b svg, .b input {
+	display:inline-block;
+	height:1em;
+	width:1em;
+	vertical-align:-10%}
+.b {
+	transition:.15s;
+	background:#fff;
+	font-weight:bold;
+	cursor:pointer;
+	line-height:1.8em;
+	display:block;
+	float:left;
+	border:1px solid #ddd;
+	padding:0 .25em;}
+.b.i {
+	float:none;
+	cursor:text;
+	display:inline-block;}
+.t .b.fs {
+	text-overflow:ellipsis;
+	white-space:pre;
+	overflow:hidden;}
+#top .b.in {
+	float: none;
+	display:block;
+	border-right:none;
+	border-left:none;
+	}
+#top .b.in:not(:first-child) {
+	border-left:1px solid #ddd !important;
+	border-top:1px solid #ddd;
+	margin-left:-1px;
+	}
+#top .b.in:last-child {border-bottom:1px solid #ddd}
+#top .h:not(:hover) .b.in:not(:first-child) {
+	height:0;
+	overflow-y:hidden;
+	border-bottom:none;
+	border-top:none;
+	}
+#top .h:hover .hid {opacity:0}
+body.night #top .b.in:not(:first-child) {border-left:1px solid #333 !important;}
+#top .b.h {
+	padding:0;
+	}
+#top .b:not(:first-child), #bottom .line .b:not(:first-child):not(:last-child) {border-left:none}
+#top .b, #bottom .line .b.as{
+	border-top:none;
+	border-bottom:none;
+	line-height:1.6em}
+.b:not(.na):not(.sel):hover {background:#def}
+.b:not(.na):not(.sel):active {background:#8ad}
+.b.sel, .b.sel path {
+	border-color:#9c9;
+	background:#cfc;
+	color:#080;
+	fill:#080;
+	cursor:default}
+.b.na {
+	color:#888;
+	cursor:default}
+.b.na path, body.night .b.na path{fill:#888}
+.b.fs{
+	width:calc(100% - .5em - 2px);
+	float:none}
+.b b {
+	padding-left:0.2em;
+	vertical-align:baseline;}
+.red {color: #e11;}
+.b.red {
+	background: #fdd;
+	border-color: #d99;
+	color: #e11;
+	fill: #e11;}
+.b.stillsel.sel {cursor:pointer}
+.b.stillsel.sel:hover {background:#6f6}
+input[type="text"].b, textarea.b, select.b {
+	cursor:text;
+	font-size:100%}
+select.b {
+	cursor:pointer;
+	height:1.8em
+}
+input:disabled.b {
+    background: #ccc !important;
+	cursor:default;
+}
+	
+.table{
+	display:inline-block;
+	vertical-align: middle;
+	text-align:center;
+	width:100%}
+.table .t{display:table-cell;}
+.table:not(.ps)  .t{padding:2px 4px}
+.table .t2:not(.sel) .t:not(.lit) {background:#fff}
+body.night .table .t2:not(.sel) .t:not(.lit) {background:#001}
+
+.table .t3{display:table;
+	table-layout:auto;
+	width:100%}
+.table .t2{
+	display:table-row;
+width:100%;}
+.table .headline .t {padding-bottom:0.3em}
+.table .b .t {border:1px solid #ddd}
+td {display:table-cell !important}
+tr {display:table-row !important}
+tr.headline, tbody, table.r {width:100%}
+tr.headline td {background:#f2f6f9}
+body.night tr.headline td {background:#091630}
+table.r td {text-align:center}
+
+input[type="checkbox"], input[type="radio"] {
+	display:none;
+}
+
+.b.ac:before, .b.acr:before {
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: 1.5em;
+    vertical-align: -0.1em;
+	text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+.b.ac:before {content:'\f096';}
+.b.ac.sel:before {content:'\f14a';}
+.b.acr:before {content:'\f10c';}
+.b.acr.sel:before {content:'\f05d';}
+
+.ps .b.fs {
+	border-top:none;
+}
+.ps .t:first-child .b.fs {
+	border-left:none;
+	width: calc(100% - .5em - 1px);
+}
+.ps .t:last-child .b.fs {
+	border-right:none;
+	width: calc(100% - .5em - 1px);
+}
+.ps .b.fs.sel {
+	border-bottom:none;
+}
+
+.pad {
+	width:calc(100% - 8px);
+	padding:3px;
+	display:none;
+	border-bottom:1px solid #eee;}
+
+.line>.pad {
+	border-left:1px solid #eee;
+	border-right:1px solid #eee;}
+}
+.de {
+	display:inline-block;
+	vertical-align: middle;
+	text-align:left}
+
+.ps {width:100%}
+.line{
+	width:100%;
+	margin-bottom:.25em}
+.line:last-child{margin-bottom:0}
+.line .t{padding-top:3px}
+
+.selection input[type="radio"] {display:none}
+input:checked + label, input:checked + label .b{background:#cfc !important}
+
+.scale{
+	position:relative;
+	height:2em;
+	line-height:1.75em;
+	margin:0;
+}
+.scale > div{
+	top:0;
+	height:100%;
+	position:absolute;
+	padding-right:0.2em;
+	z-index:1;
+	border-right:1px solid #888;
+}
+.ax{
+	margin-top:-1px;
+	border-top:1px solid #888;
+}
+#graphlist .line {height:1.75em;}
+.scale > span{
+	position:relative;
+	height:90%;
+	display:block;
+	float:left;
+	text-align:right;
+	overflow:hidden;
+}
+.scale > span.c_b{background:#f00}
+body.night .scale > span.c_b{background:#800}
+.scale > span.c_c{background:#ff0}
+body.night .scale > span.c_c{background:#880}
+
+#messages {
+	position:fixed;
+	top:2em;
+	left:0;
+	width:20em;
+	z-index:10000;
+}
+#messages > span{
+	width:calc(100% - .5em);
+	margin:.25em;
+	display:block;
+	padding:.25em;
+	background:#aaa;
+	color:#000;
+	transition: .4s;
+}
+body.night #messages > span{
+	background:#444;
+	color:#ddd;
+}
+.transparentActive #messages > span{opacity:.8}
+.transparentActive #messages > span:active{opacity:1}
+
+#messages > span.green{
+	background:#afa;
+	color:#000;
+}
+body.night #messages > span.green{
+	background:#040;
+	color:#ddd;
+}
+
+#messages > span.yellow{
+	background:#ffa;
+	color:#000;
+}
+body.night #messages > span.yellow{
+	background:#440;
+	color:#ddd;
+}
+
+#messages > span.red{
+	background:#faa;
+	color:#000;
+}
+body.night #messages > span.red{
+	background:#400;
+	color:#ddd;
+}
+
+#windows > div {
+	display:none;
+	position:fixed;
+	z-index:4;
+	}
+#windows > div.d {display:block}
+#windows .back{
+	position:fixed;
+	background:#000;
+	opacity:.4;
+	top:0;
+	left:0;
+	width:100vw;
+	height:100vh;
+	z-index:1;}
+#windows .w {
+	z-index:2;
+	position:fixed;
+	box-shadow: 0 0 10px rgba(0,0,0,0.5);
+	background:#fff;}
+	
+#windows .a {box-shadow: 0 0 10px rgba(0,0,0,1);}
+#windows .content {min-height:calc(100% - 36px - 3em)}
+#windows > div.pu {z-index:9999}
+#windows .w.ifr {
+	width:60vw;
+	left:20vw;
+	height:70vh;
+	top:15vh}
+#windows .w.ifr .header {display:none}
+#windows .w.ifr .cc {
+	overflow:hidden}
+#windows .w.ifr .content {
+	height:83%;
+	width:83%;
+	transform-origin: 0 0;
+	transform: scale(1.2);
+	padding:0 !important}
+#windows .w.ifr iframe {
+	height:100%;
+	border:none;
+	width:100%}
+#windows .w.vsm {
+	width:30vw;
+	left:35vw;
+	height:40vh;
+	top:30vh}
+#windows .w.xsm {
+	width:20vw;
+	left:40vw;
+	height:30vh;
+	top:35vh}
+#windows .w.sm {
+	width:40vw;
+	left:30vw;
+	height:45vh;
+	top:27.5vh}
+#windows .w.sm2 {
+	width:40vw;
+	left:30vw;
+	height:30vh;
+	top:35vh}
+#windows .w.m {
+	width:60vw;
+	left:20vw;
+	height:50vh;
+	top:25vh}
+#windows .w.wd {
+	width:80vw;
+	left:10vw;
+	height:40vh;
+	top:30vh}
+#windows .w.tall {
+	width:45vw;
+	left:27.5vw;
+	height:70vh;
+	top:15vh}
+#windows .w.huge {
+	width:100vw;
+	left:0vw;
+	height:100vh;
+	top:0vh}
+#windows .w.side {
+	width:17em !important; 
+	left:calc(50vw - 11em);
+	height:45vh;
+	top:25vh}
+#windows .cc{
+	height:calc(100% - 2.8em - 15px);
+	margin:.5em;
+	padding: 0;
+	overflow-y:auto}
+#windows .cc.btns{height:calc(100% - 4.6em - 18px)}
+#windows .cc.btnsdouble{height:calc(100% - 7.0em - 18px)}
+#windows .hidd {
+	height:2em !important;
+	width:30vw !important}
+#windows .hidd .cc, #windows .hidd .bt, #windows .hidd .rsz{display:none}
+#windows .bt{padding:5px}
+#windows .bt.up {margin:0 3px; padding-bottom:0}
+#windows .bt.up .t .b:first-child, #windows .bt.up .t .b:last-child{padding:0 calc(4px + .25em)}
+#windows .h, #windows .hc {
+	width:calc(100% - .33em);
+	font-size:150%;
+	font-weight:bold;
+	padding-left:.33em;
+	white-space: nowrap;
+	overflow-x:hidden;
+	color:#68a}
+#windows .hc {display:none}
+#windows .huge .hc, #windows #side .hc {display:block} 
+#windows .huge .h {display:none} 
+#windows .xsm .h {display:block}
+#windows .xsm .hc {display:none}
+#windows .h {cursor:move}
+#windows .a .hc {background:#f2f6f9}
+#windows .a .h {background:#f0f5ff}
+#windows .h:hover {background:#d0e0f0}
+#windows .controls {
+	font-size:150%;
+	font-weight:bold;
+	cursor:pointer;
+	text-align:center;
+	position:absolute;
+	top:0;
+	right:0;}
+#windows .controls > div {
+	width:1.5em;
+	background: #aff;
+	float:left;
+	color: #144}
+#windows .controls .close {
+	background: #faa;
+	color: #f00;}
+#windows .controls .close:hover {
+	background: #b22;}
+.t.lit:first-child, .t2:first-child .t.lit {background: #ccc} 
+.lit {background: #e1e1e1} 
+	
+body.night #windows .w.ifr iframe {
+	filter:invert(100%);
+	-webkit-filter:invert(100%)}
+body.night, body.night #top, body.night #side, body.night #bottom, body.night .b, body.night a {
+	background:#001;
+	color:#ccd}
+body.night * {border-color: #1b1f32 !important;}
+body.night #c {background: #012}
+body.night .b.na {color:#777}
+body.night .b:not(.na):not(.sel):hover {background:#024}
+body.night .b:not(.na):not(.sel):active {background:#8ad}
+body.night .b.sel, body.night .b.sel path{
+	background:#030;
+	border-color:#141 !important;
+	fill:#8f8;
+	color:#8f8}
+body.night .b path {fill:#eee}
+body.night .red{color: #f88;}
+body.night .b.red, body.night .b.red path{
+	background: #400;
+	border-color: #511 !important;
+	fill: #f88}
+body.night .b.stillsel.sel:hover {background:#050}
+body.night #windows .w{
+	background:#001;
+	box-shadow: 0 0 10px rgba(192,192,192,0.5)}
+body.night #windows .a	{box-shadow: 0 0 10px rgba(128,128,208,0.5)}
+body.night #windows .h, body.night #windows .hc{color:#099}
+body.night #windows .a .h, body.night #windows .h:hover,
+body.night #windows .a .hc, body.night #windows .hc:hover{background:#124}
+body.night #windows .controls > div {
+	background: #044;
+	color: #1dd}
+body.night #windows .controls > div:hover {background: #033;}
+body.night #windows .controls .close {
+	background:#d00; 
+	color:#300}	
+body.night #windows .controls .close:hover {background:#900;}	
+.night_nothide{display:none !important}
+body.night .night_nothide{display:inline !important}
+body.night .night_hide{display:none}
+body.night input:checked + label, body.night input:checked + label .b{background:#040 !important}
+body.night input:disabled.b {
+	background: #222 !important;
+	color: #888}
+body.night .t.lit:first-child, body.night .t2:first-child .t.lit {background: #144} 
+body.night .lit {background: #0a3333} 
+
+.sizes {text-align:center}
+
+.debug {display:none !important}
+body.debugEnabled .debug {display:block !important}
+
+.party_of_three {display:none !important}
+body.noMultitool .party_of_three {display:block !important}
+body.noMultitool .one_new_guy_who_wanna_remove_them_all {display:none !important}
+
+.labelHidden .b b {display:none !important}
+
+#bottom.hide {height:1.75em}
+#bottom.norm {height:30%}
+#bottom.big {height:90%; z-index: 1}
+#bottom .control > span {display:none}
+#bottom.hide .control > span.bhide,
+#bottom.norm .control > span.bnorm,
+#bottom.big .control > span.bbig
+{display:inline}
+
+.transparentActive #windows .w {opacity:.5}
+.transparentActive #windows .a, .transparentActive #windows #popUp .w {opacity:1}
+
+.b.i.color {
+	display:none;
+	cursor:pointer;
+}
+.palette .b.i.color {display:inline}
+.palette .b.i.color2 {display:none}
+
+.fa {
+	width: 1em;
+    text-align: center;
+}
+.fa.fa-window-restore {display:none}
+.huge .fa.fa-window-maximize {display:none}
+.huge .fa.fa-window-restore {display:inline}
+
+.xpad .t3 .t2 .t {white-space: pre;}
+.xpad .t3 .t2:first-child .t {max-width:9em;text-overflow: ellipsis;overflow: hidden;position:sticky;font-weight:600;top:-3px}
+.xpad .t3 .t2 .t:first-child {position:sticky;left:-3px;max-width:9em;font-weight:600;text-overflow: ellipsis;overflow: hidden;text-align:left}

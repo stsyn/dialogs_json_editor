@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="loadbar.css">
+	<link rel="stylesheet" href="font-awesome.min.css">
+	
+	<script type="text/javascript" src="converter.js"></script>
+	<script type="text/javascript" src="polyfills.js"></script>
+	<script type="text/javascript" src="core.js"></script>
+	<script type="text/javascript" src="app.js"></script>
+	<script type="text/javascript" src="selection.js"></script>
+	<script type="text/javascript" src="random.js"></script>
+	<script type="text/javascript" src="libs/lzma_worker-min.js"></script>
+	<script type="text/javascript" src="libs/aes-js-min.js"></script>
+	<script type="text/javascript" src="libs/forge-sha256.min.js"></script>
+</head>
+<body>
+	<canvas id="c"></canvas>
+	
+	<div id="top">
+	
+		<span class="b" onclick="api.requestReset()"><i class="fa fa-file-o"></i><b>New</b></span>
+		<span class="b h">
+			<span class="b in" id="load_button" onclick="api.callWindow('load')"><i class="fa fa-folder-o"></i><b>Open<span class="hid">...</span></b></span>
+			<span class="b in" onclick="api.callWindow('import')"><i class="fa fa-upload"></i><b>Import</b></span>
+		</span>
+		<span class="b h">
+			<span class="b in" id="save_button" onclick="api.saveCurrent()"><i class="fa fa-save"></i><b>Save<span class="hid">...</span>
+			<span style="float:right" id="is_not_saved">*</span></b></span>
+			<span class="b in" onclick="api.callWindow('save')"><i class="fa fa-copy"></i><b>Save as</b></span>
+			<span class="b in" onclick="api.callWindow('export')"><i class="fa fa-download"></i><b>Export</b></span>
+		</span>
+		<span class="b stillsel" id="settings_button" onclick="api.callWindow('settings')"><i class="fa fa-wrench"></i><b>Settings</b></span>
+		<span class="b stillsel" id="side_button" onclick="api.callWindow('side')">
+		<i class="fa fa-briefcase"></i><b>Tools</b>
+		</span>
+		
+		<span class="b" onclick="api.callWindow('cases')"><i class="fa fa-archive"></i><b>Characters</b></span>
+	</div>
+	
+	<div id="bottom" class="norm" data-tab-id="bottom">
+		<div class="line as">
+			<span class="b stillsel sel" onclick="api.settings.bottomHidden=false;api.styleSwitch('bottomHidden','bottomHidden',false,false,false)" data-tab-select="1" data-tab-id="bottom">Nodes</span>
+			<span class="b stillsel" onclick="api.settings.bottomHidden=false;api.styleSwitch('bottomHidden','bottomHidden',false,false,false)" data-tab-select="2" data-tab-id="bottom">Connections</span><span class="b debug na" id="debug_viewport"></span>
+			<span class="b debug na" id="debug_mouseInfo"></span>
+			<span class="b debug" id="debug_idle" onclick="api.overDraw = !api.overDraw"></span>
+			<span class="b debug na" id="debug_keyInfo">0</span>
+			<span class="b debug na" id="save_timeout">0</span>
+			<span class="control" style="float:right">
+				<span class="b bnorm bbig" onclick="document.getElementById('bottom').className='hide'"><i class="fa fa-arrow-down"></i><b>Hide</b></span>
+				<span class="b bhide" onclick="document.getElementById('bottom').className='norm'"><i class="fa fa-arrow-up"></i><b>Show</b></span>
+				<span class="b bnorm" onclick="document.getElementById('bottom').className='big'"><i class="fa fa-arrow-up"></i><b>Expand</b></span>
+				<span class="b bbig" onclick="document.getElementById('bottom').className='norm'"><i class="fa fa-arrow-down"></i><b>Minimize</b></span>
+			</span>
+		</div>
+		<div class="list">
+			<div id="bpad1" class="pad selection" data-tab-id="bottom" data-tab="1" style="display:block"><table class="r" cellspacing="0" rules="all">
+						
+			</table></div>
+			<div id="bpad2" class="pad selection" data-tab-id="bottom" data-tab="2"><table class="r" cellspacing="0" rules="all">
+						
+			</table></div>
+		</div>
+	</div>
+	
+	<div id="messages"></div>
+	
+	<div id="windows">
+		<div id="popUp" class="pu d">
+			<div onclick="api.closePopup(); api.closeWindow('inst')" class="back"></div>
+			<div class="w sm" style="z-index:9999">
+				<div class="cc" style="text-align:center">
+					<div class="header" style="font-weight:700;font-size:200%;margin-bottom:10px">Loading...</div>
+					<div class="content" style="padding-bottom:16px"><div id="squaresWaveG" style="margin-bottom:24px"><div id="squaresWaveG_1" class="squaresWaveG"></div><div id="squaresWaveG_2" class="squaresWaveG"></div><div id="squaresWaveG_3" class="squaresWaveG"></div><div id="squaresWaveG_4" class="squaresWaveG"></div><div id="squaresWaveG_5" class="squaresWaveG"></div><div id="squaresWaveG_6" class="squaresWaveG"></div><div id="squaresWaveG_7" class="squaresWaveG"></div><div id="squaresWaveG_8" class="squaresWaveG"></div></div><div id="loadstring" style="font-size:150%"></div></div>
+				</div>
+				<div class="bt"><div class="table r"><div class="t3"><div class="t2">
+					
+				</div></div></div></div>
+			</div>
+		</div>
+		
+		<div id="settings">
+			<div class="w tall">
+				<div class="h">
+					<span>Settings</span>
+				</div>
+				<div class="controls">
+					<div class="close" onclick="api.closeWindow(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-lg fa-close"></i></div>
+				</div>
+				<div class="cc btns" style="">
+					<div class="pad" style="display:block">
+						<div class="line" style="text-align:center;font-weight:700;font-size:120%;margin-bottom:8px">UI</div>
+						<div class="line">Top bar font size (0.8 - 2.5): <input type="text" class="b i" id="st_topfontsize" style="width:1.5em">em</div>
+						<div class="line">Global font size (25% - 200%): <input type="text" class="b i" id="st_glfontsize" style="width:2em">%</div>
+						<div class="line">Node size (7px - 100px): <input type="text" class="b i" id="st_elemsize" style="width:2em">px</div>
+						<div class="pad" style="width:calc(60% - 10px);display:inline-block;text-align:left;border:none">
+							<div class="line"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_grid"> Grid</label></div>
+							<div class="line"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_redGrid"> Red "0-coord" lines</label></div>
+							<div class="line"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_cursor"> External font and cursor</label></div>
+							<div class="line"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_transparency"> Extended graphics</label></div>
+							<div class="line"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_simplify"> Simplify recursive nodes</label></div>
+						</div>
+						<div class="pad" style="width:calc(40% - 10px);display:inline-block;text-align:left;border:none">
+							<div class="line"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_labels"> Icon labels</label></div>
+							<div class="line"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_elemLabels"> Node labels</label></div>
+							<div class="line"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_night"> Dark theme</label></div>
+							<div class="line hd"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_actualNames"> Имена вместо кодов</label></div>
+							<div class="line"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_alwaysCodes"> Always generate codes</label></div>
+							<div class="line"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_debug"> Debug</label></div>
+						</div>
+						<div class="line hd"><label class="b ilb stillsel ac fs" style="font-weight:normal"><input type="checkbox" id="st_noMultitool"> 3 инструмента редактирования вместо одного</label></div>
+					</div>
+					<div class="pad" style="display:block">
+						<div class="line" style="text-align:center;font-weight:700;font-size:120%;margin-bottom:8px">Node colors</div>
+						<div class="table r line"><div class="t3"><div class="t2">
+							<span class="t"><span class="b fs colorMode" onclick="api.colorMode(true)">Palette</span></span>
+							<span class="t"><span class="b fs colorMode" onclick="api.colorMode(false)">#RGB</span></span>
+						</div></div></div>
+						<div class="table r"><div class="t3">
+							<div class="t2"><span class="t de">dialogue</span><span class="t"><input class="b i fs color" type="color" style="min-width:140px"><input class="b i fs color2" type="text"></span></div>
+							<div class="t2"><span class="t de">narration</span><span class="t"><input class="b i fs color" type="color"><input class="b i fs color2" type="text"></span></div>
+							<div class="t2"><span class="t de">if</span><span class="t"><input class="b i fs color" type="color"><input class="b i fs color2" type="text"></span></div>
+							<div class="t2"><span class="t de">scene</span><span class="t"><input class="b i fs color" type="color"><input class="b i fs color2" type="text"></span></div>
+							<div class="t2"><span class="t de">combat</span><span class="t"><input class="b i fs color" type="color"><input class="b i fs color2" type="text"></span></div>
+							<div class="t2"><span class="t de"></span><span class="t"><input class="b i fs color" type="color"><input class="b i fs color2" type="text"></span></div>
+							<div class="t2"><span class="t de">Active</span><span class="t"><input class="b i fs color" type="color" style="min-width:140px"><input class="b i fs color2" type="text"></span></div>
+						</div></div>
+					</div>
+					<div class="pad" style="display:block">
+						<div class="line" style="text-align:center;font-weight:700;font-size:120%;margin-bottom:8px">Behaviour</div>
+						<div class="line">Autosave interval (0 - disable): <input type="text" class="b i" id="st_autosave" style="width:1.5em">min</div>
+						<div class="line">
+							<label class="b i stillsel ac" style="font-weight:normal"><input type="checkbox" id="st_autoload"> Autoload last project</label>
+							<label class="b i stillsel ac hd" style="font-weight:normal"><input type="checkbox" id="st_tooltips"> Подсвечивать действия</label>
+						</div>
+					</div>
+					<div class="pad debug" style="display:block">
+						<div class="line red" style="text-align:center;font-weight:700;font-size:120%;margin-bottom:8px">Extended</div>
+						<div class="line red">Change carefully!</div>
+						<div class="line">Redraw interval: <input type="text" class="b i" id="st_debugInterval" style="width:1.5em">ms</div>
+						<div class="line">Canvas size: <input type="text" class="b i" id="st_debugCanvasSize" style="width:2em">%</div>
+					</div>
+					<div class="pad" style="display:block">
+						<div class="line">
+							<div class="linebar" style="height:1.5em; line-height:1.5em;"><div class="sizes" style="font-size:70%"></div></div>
+						</div><div class="table r"><div class="t3"><div class="t2">
+							<span class="t"><span class="b fs red" onclick="api.loadDefault();api.putSettings();api.saveSettings()">Set defaults</span></span>
+							<span class="t"><span class="b fs red" onclick="api.callPopup2({header:'Full reset',content:'Attention! Absolutelly everything will be deleted.',size:2,windowsize:'m',buttons:[{functions:'api.resetData();api.closePopup()',red:true,name:'Continue'},{functions:'api.closePopup()',name:'Cancel'}]})">Clear data</span></span>
+						</div></div></div>
+					</div>
+				</div>
+				<div class="bt"><div class="table r"><div class="t3"><div class="t2">
+					<span class="t" style="width:33%"><span class="b fs" onclick="api.closeWindow('settings')">Cancel</span></span>
+					<span class="t" style="width:34%"><span class="b fs" onclick="api.getSettings();api.saveSettings()">Apply</span></span>
+					<span class="t" style="width:33%"><span class="b fs" onclick="api.getSettings();api.saveSettings();api.closeWindow('settings')">OK</span></span>
+				</div></div></div></div>
+			</div>
+		</div>
+	
+		<div id="side">
+			<div class="w side">
+				<div class="hc">
+					<span>Tools</span>
+				</div>
+				<div class="controls">
+					<div onclick="api.switchWindowState(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-window-minimize"></i></div>
+					<div class="close" onclick="api.closeWindow(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-lg fa-close"></i></div>
+				</div>
+				<div class="cc" data-tab-id="side">
+					<div class="table ps hd"><div class="t3"><div class="t2">
+						<span class="t"><span class="b fs sel" data-tab-select="1" data-tab-id="side">Editor</span></span>
+					</div></div></div>
+					
+					<div data-tab="1" data-tab-id="side" class="pad" style="display:block">
+						<span class="de l">If brush changes...</span>
+						<div class="line" style="text-align:center">
+							<div class="table r"><div class="t3">
+							<div class="t2">
+								<span class="t"><span class="b fs" id="brush-4" onclick="api.selectBrush(-4)">Main</span></span>
+							</div>
+							</div></div>
+						</div>
+						<span class="de l">Selection</span>
+						<div class="line" style="text-align:center">
+							<span class="b fs" onclick="selection.selectAll()">Select all</span>
+							<span class="b fs selectionRequired" onclick="selection.inverSelection()">Invert</span>
+							<div class="table r"><div class="t3">
+							<div class="t2">
+								<span class="de l">Rotate</span>
+							</div>
+							<div class="t2">
+								<span class="t"><span class="b fs selectionRequired" onclick="selection.rotate(true)">Left</span></span>
+								<span class="t"><span class="b fs selectionRequired" onclick="selection.rotate(false)">Right</span></span>
+							</div>
+							<div class="t2">
+								<span class="de l">Mirror</span>
+							</div>
+							<div class="t2">
+								<span class="t"><span class="b fs selectionRequired" onclick="selection.mirror(true)">Vertically</span></span>
+								<span class="t"><span class="b fs selectionRequired" onclick="selection.mirror(false)">Horisontally</span></span>
+							</div>
+							</div></div>
+						</div>
+						<div class="line" style="text-align:center">
+							<span class="b fs red selectionRequired" onclick="if (selection.stuffAllowed) api.callPopup2(windows.sureDeleteSelection)">Delete</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="save">
+			<div class="back"></div>
+			<div class="w huge">
+				<div class="hc">
+					<span>Save</span>
+				</div>
+				<div class="controls">
+					<div class="close" onclick="api.closeWindow(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-lg fa-close"></i></div>
+				</div>
+				<div class="cc btns">
+					<div id="savelist" class="pad selection" style="display:block;float:left;width:calc(100% - 30em - 16px);height:calc(100% - 8px)"></div>
+					<div id="savepad" class="pad" style="display:block;float:left;width:30em;height:calc(100% - 8px);white-space:pre-wrap;word-wrap:break-word"></div>
+				</div>
+				<div class="bt"><div class="table r"><div class="t3"><div class="t2">
+					<span class="t"><span class="b fs" onclick="api.closeWindow('save')">Cancel</span></span>
+					<span class="t"><span class="b fs" onclick="api.trySave()">Save</span></span>
+				</div></div></div></div>
+			</div>
+		</div>
+		
+		<div id="cases">
+			<div class="back"></div>
+			<div class="w huge defhuge">
+				<div class="h"><span>Chars</span></div>
+				<div class="hc"><span>Chars</span></div>
+				<div class="controls">
+					<div class="close" onclick="api.closeWindow(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-lg fa-close"></i></div>
+				</div>
+				<div class="cc btns">
+					<div id="caselist" class="pad" style="display:block;float:left;width:20em;height:calc(100% - 8px);word-wrap:break-word"></div>
+					<div id="caseinfo" class="pad" style="display:block;float:left;width:calc(100% - 20em - 16px);height:calc(100% - 8px);height:calc(100% - 8px);word-wrap:break-word">
+						<div class="line">Name: <input type="text" class="b i cs" name="name" id="cs_name" style="width:20em"></div>
+						<div class="line">sound: <input type="text" class="b i cs" name="sound" id="cs_sound" style="width:20em"></div>
+						<div class="line">avatar: <input type="text" class="b i cs" name="avatar" id="cs_avatar" style="width:20em"></div>
+						<div class="line">pitch: <input type="text" class="b i cs" data-parse="float" name="pitch" id="cs_pitch" style="width:20em"></div>
+						<div class="line">duration: <input type="text" class="b i cs" data-parse="float" name="duration" id="cs_duration" style="width:20em"></div>
+						<div class="line">step: <input type="text" class="b i cs" data-parse="float" name="step" id="cs_step" style="width:20em"></div>
+						<div class="line">color (r,g,b,a): <input type="text" class="b i cs" name="color" id="cs_color" style="width:20em"></div>
+						<div class="line"><div class="b red" id="cs_del" onclick="api.requestDeletionCase()">Delete</div></div>
+					</div>
+				</div>
+				<div class="bt"><div class="table r"><div class="t3"><div class="t2">
+					<span class="t"><span class="b fs" onclick="api.closeWindow('cases')">Close</span></span>
+				</div></div></div></div>
+			</div>
+		</div>
+		
+		<div id="load">
+			<div class="back"></div>
+			<div class="w huge">
+				<div class="hc">
+					<span>Open</span>
+				</div>
+				<div class="controls">
+					<div class="close" onclick="api.closeWindow(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-lg fa-close"></i></div>
+				</div>
+				<div class="cc btns">
+					<div id="loadlist" class="pad selection" style="display:block;float:left;width:calc(100% - 30em - 16px);height:calc(100% - 8px)"></div>
+					<div id="loadpad" class="pad" style="display:block;float:left;width:30em;height:calc(100% - 8px);white-space:pre-wrap;word-wrap:break-word"></div>
+				</div>
+				<div class="bt"><div class="table r"><div class="t3"><div class="t2">
+					<span class="t"><span class="b fs" onclick="api.closeWindow('load')">Cancel</span></span>
+					<span class="t"><span class="b fs red" onclick="api.callPopup2(windows.deleteSave)">Delete</span></span>
+					<span class="t"><span class="b fs" onclick="api.tryLoad()">Open</span></span>
+				</div></div></div></div>
+			</div>
+		</div>
+		
+		<div id="export">
+			<div class="back"></div>
+			<div class="w m">
+				<div class="hc"><span>Export</span></div>
+				<div class="h"><span>Export</span></div>
+				<div class="controls">
+					<div class="rsz" onclick="api.switchWindowSize(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-window-maximize"></i><i class="fa fa-window-restore"></i></div>
+					<div class="close" onclick="api.closeWindow(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-lg fa-close"></i></div>
+				</div>
+				<div class="cc btns">
+					<textarea type="text" class="b i ex_c" style="width:calc(100% - 8px - 0.5em); max-width:calc(100% - 8px - 0.5em);max-height:90%;height:70%"></textarea>
+					<div class="line exportlink"></div>
+					<div class="line"></div>
+				</div>
+				<div class="bt"><div class="table r"><div class="t3"><div class="t2">
+					<span class="t"><span class="b fs" onclick="api.closeWindow('export')">Close</span></span>
+					<span class="t"><span class="b fs" onclick="api.exportProject()">Download</span></span>
+				</div></div></div></div>
+			</div>
+		</div>
+		
+		<div id="import">
+			<div class="back"></div>
+			<div class="w m">
+				<div class="hc"><span>Import</span></div>
+				<div class="h"><span>Import</span></div>
+				<div class="controls">
+					<div class="rsz" onclick="api.switchWindowSize(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-window-maximize"></i><i class="fa fa-window-restore"></i></div>
+					<div class="close" onclick="api.closeWindow(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-lg fa-close"></i></div>
+				</div>
+				<div class="cc btns">
+					<textarea type="text" class="b i im_c" style="width:calc(100% - 8px - 0.5em); max-width:calc(100% - 8px - 0.5em);max-height:90%;height:70%"></textarea>
+					<div class="line">Copy file content here or drag it inside of box.</div>
+					<div class="line" id="importpad"></div>
+				</div>
+				<div class="bt"><div class="table r"><div class="t3"><div class="t2">
+					<span class="t"><span class="b fs" onclick="api.closeWindow('import')">Close</span></span>
+					<span class="t"><span class="b fs" onclick="api.importProject()">Open</span></span>
+				</div></div></div></div>
+			</div>
+		</div>
+		
+		<div id="inst">
+			<div class="back"></div>
+			<div class="w tall">
+				<div class="h">
+					<span>New node</span>
+				</div>
+				<div class="cc btns" style="text-align:center">
+					<div class="pad" style="display:block">
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de" style="width:20%"><input type="text" class="b i na" data-no-edit data-parse="int" data-val="id" style="width:100%" disabled></div>
+							<div class="t de" style="width:80%">code: <input type="text" class="b i" data-val="code" data-parse="string" style="width:calc(100% - 4em)"></div>
+						</div></div></div>
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de" style="width:50%"><span data-display-types="[1]">speaker: <input type="text" class="b i" data-val="speaker" data-parse="string" style="width:calc(100% - 6em)"></span></div>
+							<div class="t de" style="width:50%"><span data-display-types="[1]">opposite: <input type="text" class="b i" data-val="opposite" data-parse="string" style="width:calc(100% - 7em)"></span></div>
+						</div></div></div>
+						<div class="line prefill" data-display-types="[1]"></div>
+						<label class="b ilb stillsel ac" style="font-weight:normal"><input type="checkbox" data-val="root_node"> root_node</label>
+						<div class="line de" data-display-types="[1, 2]">body: <textarea class="b i" data-val="body" data-parse="string" style="width:calc(100% - 8px - 0.5em); max-width:calc(100% - 8px - 0.5em);max-height:4em"></textarea></div>
+						<div class="pad" data-display-types="[3]">
+							condition:
+							<div class="table r"><div class="t3"><div class="t2">
+								<div class="t de" style="width:30%">key: <input type="text" class="b i" data-val="key" data-parse="string" style="width:6em"></div>
+								<div class="t de" style="width:30%">op: <input type="text" class="b i op" data-val="op" data-parse="string" style="width:6em"></div>
+								<div class="t de" style="width:40%">value: <input type="text" class="b i" data-val="value" data-parse="string" style="width:6em"></div>
+							</div></div></div>
+							<span class="autofill b in ilb" data-target="#inst.d input.op" data-value="eq">&nbsp; == &nbsp;</span>
+							<span class="autofill b in ilb" data-target="#inst.d input.op" data-value="not">&nbsp; != &nbsp;</span>
+							<span class="autofill b in ilb" data-target="#inst.d input.op" data-value="gt">&nbsp; &gt; &nbsp;</span>
+							<span class="autofill b in ilb" data-target="#inst.d input.op" data-value="gte">&nbsp; &gt;= &nbsp;</span>
+							<span class="autofill b in ilb" data-target="#inst.d input.op" data-value="lt">&nbsp; &lt; &nbsp;</span>
+							<span class="autofill b in ilb" data-target="#inst.d input.op" data-value="lte">&nbsp; &lt;= &nbsp;</span>
+						</div>
+						<div class="line de">set: <textarea class="b i" data-val="set" data-parse="string" style="width:calc(100% - 8px - 0.5em); max-width:calc(100% - 8px - 0.5em);height:4em"></textarea></div>
+					</div>
+					
+					<div class="pad debug">
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de" style="width:38%">X: <input type="text" class="b i" data-val="X" data-parse="float" style="width:4em"></div>
+							<div class="t de" style="width:38%">Y: <input type="text" class="b i" data-val="Y" data-parse="float" style="width:4em"></div>
+							<div class="t de" style="width:24%">type: <input type="text" class="b i na" data-no-edit data-val="type" data-parse="int" style="width:2em" disabled></div>
+						</div></div></div>
+					</div>
+					<div class="pad" style="display:block">
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de" style="width:30%">size %: <input type="text" class="b i" data-val="z" data-special-input="(thisValue*100)" data-default="100" data-special-output="(thisValue/100)" data-parse="int" style="width:4em"></div>
+							<div class="t de" style="width:30%">color: <input type="text" class="b i color2" data-val="privateColor" data-parse="string" data-read-condition="!api.settings.palette" data-special-output="(thisValue==api.settings.color[el.type-1]?0:thisValue)" style="width:6em">
+							<input type="checkbox" class="b i color cc_color_check"> 
+							<input type="color" class="b i color" data-mark=".cc_color_check" data-parse="string" data-val="privateColor" data-read-condition="api.settings.palette" data-special-output="(thisValue==api.settings.color[el.type-1]?0:thisValue)" style="width:5em"></div>
+						</div></div></div>
+					</div>
+				</div>
+				<div class="bt"><div class="table r"><div class="t3"><div class="t2">
+					<span class="t"><span class="b fs _сс_close2" onclick="cancelCreation();api.closeWindow('inst')">Cancel</span></span>
+					<span class="t"><span class="b fs _сс_apply" onclick="createAndAddElement('inst', false);api.closeWindow('inst')">Create</span></span>
+				</div></div></div></div>
+			</div>
+		</div>
+	
+		<div id="instb">
+			<div class="back"></div>
+			<div class="w sm">
+				<div class="h">
+					<span>New connection</span>
+				</div>
+				<div class="cc btns" style="text-align:center">
+					<div class="pad" style="display:block">
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de" style="width:10%"><input type="text" class="b i na cc_id" data-no-edit data-parse="int" data-val="id" style="width:2em" disabled></div>
+							<div class="t de" style="width:50%">from: <input type="text" class="b i" data-val="first" data-parse="int" style="width:3em" disabled></div>
+							<div class="t de" style="width:40">to: <input type="text" class="b i" data-val="second" data-parse="int" style="width:3em" disabled></div>
+						</div></div></div>
+						<br>
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de">act: <input type="text" class="b i act" data-val="act" data-parse="string" style="width:10em"></div>
+							<span class="autofill b in ilb" data-target="#instb.d input.act" data-value="next">&nbsp; next &nbsp;</span>
+							<span class="autofill b in ilb" data-target="#instb.d input.act" data-value="else">&nbsp; else &nbsp;</span>
+						</div></div></div>
+					</div>
+				</div>
+				<div class="bt"><div class="table r"><div class="t3"><div class="t2">
+					<span class="t"><span class="b fs _сс_close2" onclick="cancelCreationBond();api.closeWindow('instb')">Cancel</span></span>
+					<span class="t"><span class="b fs _сс_apply" onclick="createAndAddBond('instb', false);api.closeWindow('instb')">Create</span></span>
+				</div></div></div></div>
+			</div>
+		</div>
+	
+	</div>
+	<div id="data" style="display:none">
+		<div id="_editb_template_">
+			<div class="back hd"></div>
+			<div class="w sm2">
+				<div class="h"><span>Connection</span></div>
+				<div class="hc"><span>Connection</span></div>
+				<div class="controls">
+					<div onclick="api.switchWindowState(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-window-minimize"></i></div>
+					<div class="rsz" onclick="api.switchWindowSize(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-window-maximize"></i><i class="fa fa-window-restore"></i></div>
+					<div class="close" onclick="api.closeWindow(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-lg fa-close"></i></div>
+				</div>
+				<div class="cc btns" style="text-align:center">
+					<div class="pad" style="display:block">
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de" style="width:10%"><input type="text" class="b i na cc_id" data-no-edit data-parse="int" data-val="id" style="width:2em" disabled></div>
+							<div class="t de" style="width:50%">from: <input type="text" class="b i" data-val="first" data-parse="int" style="width:3em" disabled></div>
+							<div class="t de" style="width:40">to: <input type="text" class="b i" data-val="second" data-parse="int" style="width:3em" disabled></div>
+						</div></div></div>
+						<br>
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de">act: <input type="text" class="b i act" data-val="act" data-parse="string" style="width:10em"></div>
+							<span class="autofill b in ilb" data-target=".d input.act" data-value="next">&nbsp; next &nbsp;</span>
+							<span class="autofill b in ilb" data-target=".d input.act" data-value="else">&nbsp; else &nbsp;</span>
+						</div></div></div>
+					</div>
+					<div class="pad selection elist" style="display:block"><table class="r" cellspacing="0" rules="all">
+						
+					</table></div>
+				</div>
+				<div class="bt"><div class="table r"><div class="t3"><div class="t2">
+					<span class="t"><span class="b fs _сс_delete red">Delete</span></span>
+					<span class="t"><span class="b fs _сс_close2">Cancel</span></span>
+					<span class="t"><span class="b fs _сс_apply">OK</span></span>
+				</div></div></div></div>
+			</div>
+		</div>
+	
+		<div id="_edit_template_">
+			<div class="back hd"></div>
+			<div class="w sm">
+				<div class="h"><span>Node</span></div>
+				<div class="hc"><span>Node</span></div>
+				<div class="controls">
+					<div onclick="api.switchWindowState(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-window-minimize"></i></div>
+					<div class="rsz" onclick="api.switchWindowSize(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-window-maximize"></i><i class="fa fa-window-restore"></i></div>
+					<div class="close" onclick="api.closeWindow(this.parentNode.parentNode.parentNode.id)"><i class="fa fa-lg fa-close"></i></div>
+				</div>
+				<div class="cc btns" style="text-align:center">
+					<div class="pad" style="display:block">
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de" style="width:20%"><input type="text" class="b i na cc_id" data-no-edit data-parse="int" data-val="id" style="width:100%" disabled></div>
+							<div class="t de" style="width:80%">code: <input type="text" class="b i" data-val="code" data-parse="string" style="width:calc(100% - 4em)"></div>
+						</div></div></div>
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de" style="width:50%"><span data-display-types="[1]">speaker: <input type="text" class="b i" data-val="speaker" data-parse="string" style="width:calc(100% - 6em)"></span></div>
+							<div class="t de" style="width:50%"><span data-display-types="[1]">opposite: <input type="text" class="b i" data-val="opposite" data-parse="string" style="width:calc(100% - 7em)"></span></div>
+            </div></div></div>
+						<div class="line prefill" data-display-types="[1]"></div>
+						<label class="b ilb stillsel ac" style="font-weight:normal"><input type="checkbox" data-val="root_node"> root_node</label>
+						<div class="line de" data-display-types="[1, 2]">body: <textarea class="b i" data-val="body" data-parse="string" style="width:calc(100% - 8px - 0.5em); max-width:calc(100% - 8px - 0.5em);max-height:4em"></textarea></div>
+						<div class="line de" data-display-types="[5]">enemy: <input type="text" class="b i" data-val="enemy" data-parse="string" style="width:calc(100% - 4em)"></div>
+						<div class="pad" data-display-types="[3]">
+							condition:
+							<div class="table r"><div class="t3"><div class="t2">
+								<div class="t de" style="width:30%">key: <input type="text" class="b i" data-val="key" data-parse="string" style="width:6em"></div>
+								<div class="t de" style="width:30%">op: <input type="text" class="b i op" data-val="op" data-parse="string" style="width:6em"></div>
+								<div class="t de" style="width:40%">value: <input type="text" class="b i" data-val="value" data-parse="string" style="width:6em"></div>
+							</div></div></div>
+							<span class="autofill b in ilb" data-target=".d input.op" data-value="eq">&nbsp; == &nbsp;</span>
+							<span class="autofill b in ilb" data-target=".d input.op" data-value="not">&nbsp; != &nbsp;</span>
+							<span class="autofill b in ilb" data-target=".d input.op" data-value="gt">&nbsp; &gt; &nbsp;</span>
+							<span class="autofill b in ilb" data-target=".d input.op" data-value="gte">&nbsp; &gt;= &nbsp;</span>
+							<span class="autofill b in ilb" data-target=".d input.op" data-value="lt">&nbsp; &lt; &nbsp;</span>
+							<span class="autofill b in ilb" data-target=".d input.op" data-value="lte">&nbsp; &lt;= &nbsp;</span>
+						</div>
+						<div class="line de">set: <textarea class="b i" data-val="set" data-parse="string" style="width:calc(100% - 8px - 0.5em); max-width:calc(100% - 8px - 0.5em);height:4em"></textarea></div>
+					</div>
+					
+					<div class="pad debug">
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de" style="width:38%">X: <input type="text" class="b i" data-val="X" data-parse="float" style="width:4em"></div>
+							<div class="t de" style="width:38%">Y: <input type="text" class="b i" data-val="Y" data-parse="float" style="width:4em"></div>
+							<div class="t de" style="width:24%">type: <input type="text" class="b i na" data-no-edit data-val="type" data-parse="int" style="width:2em" disabled></div>
+						</div></div></div>
+					</div>
+					<div class="pad" style="display:block">
+						<div class="table r"><div class="t3"><div class="t2">
+							<div class="t de" style="width:30%">size %: <input type="text" class="b i" data-val="z" data-special-input="(thisValue*100)" data-default="100" data-special-output="(thisValue/100)" data-parse="int" style="width:4em"></div>
+							<div class="t de" style="width:30%">color: <input type="text" class="b i color2" data-val="privateColor" data-parse="string" data-read-condition="!api.settings.palette" data-special-output="(thisValue==api.settings.color[el.type-1]?0:thisValue)" style="width:6em">
+							<input type="checkbox" class="b i color cc_color_check"> 
+							<input type="color" class="b i color" data-mark=".cc_color_check" data-parse="string" data-val="privateColor" data-read-condition="api.settings.palette" data-special-output="(thisValue==api.settings.color[el.type-1]?0:thisValue)" style="width:5em"></div>
+						</div></div></div>
+					</div>
+					<div class="pad ellist" style="display:block">
+					
+					</div>
+					<div class="pad selection blist" style="display:block;margin-top:2em"><table class="r" cellspacing="0" rules="all">
+						
+					</table></div>
+				</div>
+				<div class="bt"><div class="table r"><div class="t3"><div class="t2">
+					<span class="t"><span class="b fs _сс_delete red">Delete</span></span>
+					<span class="t"><span class="b fs _сс_close2">Cancel</span></span>
+					<span class="t"><span class="b fs _сс_apply">OK</span></span>
+				</div></div></div></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
