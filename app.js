@@ -670,7 +670,7 @@ function appMain() {
 					}
 					if (doMoving.selectionMove) {
 						for (var i=0; i<project.elements.length; i++) {
-							if (project.elements == undefined || isOnBond(i) || !selection.elements[i] || i == AuxMove) continue;
+							if (project.elements == undefined || isOnBond(i) || !selection.elements[i] || i == AuxMove || !project.elements[i]) continue;
 							x = gridCoords(cache.elements[i].oldX + (translateCoordsReverseX(api.mouse.X) - tElemX));
 							y = gridCoords(cache.elements[i].oldY + (translateCoordsReverseY(api.mouse.Y) - tElemY));
 							if (isElementThere(x,y,i)) continue;
