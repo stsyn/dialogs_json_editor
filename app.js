@@ -1,4 +1,4 @@
-﻿var project = {settings:{},elements:[],bonds:[],viewport:{}};
+var project = {settings:{},elements:[],bonds:[],viewport:{}};
 var colorScheme = [
 {bg:"#fff",line:"#ddd",coord:"#f88",connections:"#111",actconn:"#8f8",fakeconn:"#f88",fakeconnt:"#800",
 selected:"#00f",aconnections:"rgba(17,17,17,0)",aactconn:"rgba(136,255,136,0)",afakeconn:"rgba(255,136,136,0)",afakeconnt:"rgba(136,0,0,0)",
@@ -645,7 +645,7 @@ function appMain() {
 				
 				if (doMoving.selectionMove) {
 					for (var i=0; i<project.elements.length; i++) {
-						if (project.elements == undefined || isOnBond(i) || !selection.elements[i] || i == AuxMove) continue;
+						if (project.elements == undefined || isOnBond(i) || !selection.elements[i] || i == AuxMove || !project.elements[i]) continue;
 						
 						cache.elements[i].oldX = parseFloat(project.elements[i].X);
 						cache.elements[i].oldY = parseFloat(project.elements[i].Y);
