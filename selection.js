@@ -96,7 +96,7 @@ selection.getBorders = function() {
 		centerY:0
 	};
 	for (var i=0; i<project.elements.length; i++) {
-		if (project.elements == undefined || cache.elements[i] == undefined || isOnBond(i)) continue;
+		if (project.elements[i] == undefined || cache.elements[i] == undefined || isOnBond(i)) continue;
 		if (selection.elements[i]) {
 			if (limits.minX > project.elements[i].X) limits.minX = project.elements[i].X;
 			if (limits.maxX < project.elements[i].X) limits.maxX = project.elements[i].X;
